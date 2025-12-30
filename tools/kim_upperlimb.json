@@ -1,0 +1,38 @@
+{
+  "tool": "KIM-MHO",
+  "name": "KIM 手工物料作業",
+  "description": "評估上肢反覆動作作業（如裝配/包裝）的肌肉骨骼風險。",
+  "variables": [
+    {"key": "duration", "label": "每日累計作業時間", "unit": "小時", "type": "number", "min": 0.5, "max": 10, "step": 0.5, "hint": "此子作業一天中累計持續的時數", "required": true},
+    {"key": "forceLevelLeft", "label": "左手用力類型", "type": "select", "options": [ {"value": "low", "label": "低（~15% MVC）"}, {"value": "medium", "label": "中（~30% MVC）"}, {"value": "high", "label": "高（~50% MVC）"}, {"value": "veryHigh", "label": "很高（~80% MVC）"}, {"value": "peak", "label": "峰值（>80% MVC）"}, {"value": "impact", "label": "衝擊用力"} ], "hint": "左手在作業循環中的用力類型粗分", "required": true},
+    {"key": "forceLevelRight", "label": "右手用力類型", "type": "select", "options": [ {"value": "low", "label": "低（~15% MVC）"}, {"value": "medium", "label": "中（~30% MVC）"}, {"value": "high", "label": "高（~50% MVC）"}, {"value": "veryHigh", "label": "很高（~80% MVC）"}, {"value": "peak", "label": "峰值（>80% MVC）"}, {"value": "impact", "label": "衝擊用力"} ], "hint": "右手在作業循環中的用力類型", "required": true},
+    {"key": "holdTime", "label": "平均握持時間", "unit": "秒/分", "type": "number", "min": 0, "max": 60, "hint": "每分鐘內持續握持（用力）累計的秒數", "required": true},
+    {"key": "moveCount", "label": "平均動作頻率", "unit": "次/分", "type": "number", "min": 0, "max": 120, "hint": "每分鐘內手部重複動作的次數", "required": true},
+    {"key": "grip", "label": "抓握/工具條件", "type": "select", "options": [ {"value": 0, "label": "良好：易握持，人體工學設計良好（0分）"}, {"value": 2, "label": "受限：需較大握力/無良好握把（+2分）"}, {"value": 4, "label": "很差：難以抓握/無適當握把（+4分）"} ], "hint": "物件或手工具的握持難易程度", "required": true},
+    {"key": "handPosture", "label": "手部姿勢穩定性", "type": "select", "options": [ {"value": 0, "label": "良好：關節姿勢放鬆、無長時間固定（0分）"}, {"value": 1, "label": "受限：偶爾達極限/偶有靜態用力（+1分）"}, {"value": 2, "label": "不良：頻繁達極限/長時間靜態（+2分）"}, {"value": 3, "label": "很差：持續極限姿勢/固定不動（+3分）"} ], "hint": "上肢關節位置是否常處於不自然或固定狀態", "required": true},
+    {"key": "conditions", "label": "不良環境因素", "type": "select", "options": [ {"value": 0, "label": "無明顯不良（0分）"}, {"value": 1, "label": "稍有干擾（+1分）"}, {"value": 2, "label": "持續干擾（+2分）"} ], "hint": "作業環境中影響員工作業舒適性的因素程度", "required": true},
+    {"key": "bodyPosture", "label": "全身姿勢", "type": "select", "options": [ {"value": 0, "label": "良好：可坐站交替/姿勢自然（0分）"}, {"value": 2, "label": "受限：偶有前傾/手高舉等（+2分）"}, {"value": 4, "label": "不良：常前傾/需頻繁曲身（+4分）"}, {"value": 6, "label": "很差：嚴重前傾或扭曲姿勢（+6分）"} ], "hint": "整體工作姿勢是否不良，如長期彎腰、蹲跪等", "required": true},
+    {"key": "organization", "label": "工作組織", "type": "select", "options": [ {"value": 0, "label": "良好：多樣工作交替（0分）"}, {"value": 2, "label": "受限：偶爾單一高負荷（+2分）"}, {"value": 4, "label": "不良：長時間單一高負荷（+4分）"} ], "hint": "一天中此上肢作業是否與其他工作交替進行", "required": true}
+  ],
+  "scoring": {
+    "timePoints": [
+      {"upto": 1, "points": 1}, {"upto": 2, "points": 2}, {"upto": 3, "points": 3}, {"upto": 4, "points": 4}, {"upto": 5, "points": 5}, {"upto": 6, "points": 6}, {"upto": 7, "points": 7}, {"upto": 8, "points": 8}, {"upto": 9, "points": 9}, {"above": 9, "points": 10}
+    ],
+    "forceTable": {
+      "low": {"holding": [0.5, 1.5, 3, 5.5], "moving": [0.5, 1, 2.5, 5, 7]},
+      "medium": {"holding": [0.5, 2.5, 4.5, 9], "moving": [0.5, 2, 4, 7.5, 11]},
+      "high": {"holding": [1, 3.5, 7, 14], "moving": [0.5, 3, 6, 12, 18]},
+      "veryHigh": {"holding": [1.5, 5.5, 11, 22], "moving": [null, 5, 10, 19, null]},
+      "peak": {"holding": [8, 35, 100, 100], "moving": [30, 100, 100, 100]},
+      "impact": {"holding": [], "moving": [8, 30, 100]}
+    },
+    "forceBreakpoints": {"holdingSec": [15, 30, 60, 90], "movingCount": [5, 15, 30, 60, 90]},
+    "leftRightWorst": true
+  },
+  "riskLevels": [
+    {"level": 1, "label": "低風險", "range": "<20", "description": "過載風險低", "recommendation": "維持良好作業習慣。"},
+    {"level": 2, "label": "中風險", "range": "20-49", "description": "稍有過載可能", "recommendation": "適度調整作息與作業方式。"},
+    {"level": 3, "label": "中高風險", "range": "50-99", "description": "一般人也可能過載", "recommendation": "應考慮工程/行政改善措施。"},
+    {"level": 4, "label": "高風險", "range": ">=100", "description": "極可能導致傷害", "recommendation": "立即重新設計工作，減少上肢負荷。"}
+  ]
+}
