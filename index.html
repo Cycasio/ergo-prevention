@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人因性危害評估工具 | 靜態 SPA</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>人因性危害評估工具（NIOSH RLE / KIM-LHC / KIM-MHO）</h1>
+    <p>依據規格完整實作三大評估工具，於純前端靜態頁面即時計算 LI、CLI、KIM 總分與風險分級，並輸出符合 ErgoToolResult 結構的 JSON 結果。</p>
+  </header>
+
+  <div class="main-grid">
+    <nav>
+      <h3>工具選擇</h3>
+      <button data-target="niosh" class="active">NIOSH 改良提舉方程式</button>
+      <button data-target="kim-lhc">KIM 抬舉/握持/搬運</button>
+      <button data-target="kim-mho">KIM 手工物料作業</button>
+      <div class="card" style="margin-top:12px; font-size:13px; color:var(--muted);">
+        <strong>使用提示</strong>
+        <ul class="list">
+          <li>所有計算完全遵循規格，不做簡化。</li>
+          <li>結果會同步寫入 <code>localStorage</code> 的 <code>ergoResult</code>。</li>
+          <li>可將多個 NIOSH 任務加入列表，計算複合 CLI。</li>
+        </ul>
+      </div>
+    </nav>
+
+    <section id="niosh" class="section active">
+      <h2>NIOSH 改良提舉方程式 <span class="badge">RWL / LI / CLI</span></h2>
+      <p class="hint">僅適用於雙手舒適站姿、良好環境、提舉速度不過快的情境。依據規格中的乘數計算 RWL 與 LI，並可建構複合 CLI。</p>
+      <form id="niosh-form"></form>
+      <div class="actions">
+        <button type="button" class="primary" id="calc-niosh">計算單一作業</button>
+        <button type="button" class="secondary" id="add-niosh-task">加入複合任務列表</button>
+        <button type="button" class="secondary" id="clear-niosh-list">清空複合任務列表</button>
+      </div>
+      <div id="niosh-result" class="result"></div>
+      <div id="niosh-cli" class="result" style="display:none"></div>
+      <details style="margin-top:12px;">
+        <summary>複合任務列表</summary>
+        <div id="niosh-task-list" class="cards"></div>
+      </details>
+    </section>
+
+    <section id="kim-lhc" class="section">
+      <h2>KIM-LHC <span class="badge">抬舉/握持/搬運風險</span></h2>
+      <p class="hint">依據 KIM-LHC 指標累計分數並乘以時間評級，得到總分後依門檻分級（<20、20-49、50-99、≥100）。</p>
+      <form id="kim-lhc-form"></form>
+      <div class="actions">
+        <button type="button" class="primary" id="calc-kim-lhc">計算 KIM-LHC</button>
+      </div>
+      <div id="kim-lhc-result" class="result"></div>
+    </section>
+
+    <section id="kim-mho" class="section">
+      <h2>KIM-MHO <span class="badge">上肢反覆動作</span></h2>
+      <p class="hint">依照力道評級（左右手取高）、抓握、姿勢、環境與時間評級計算總分，並依四級門檻呈現風險。</p>
+      <form id="kim-mho-form"></form>
+      <div class="actions">
+        <button type="button" class="primary" id="calc-kim-mho">計算 KIM-MHO</button>
+      </div>
+      <div id="kim-mho-result" class="result"></div>
+    </section>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

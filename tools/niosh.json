@@ -1,0 +1,76 @@
+{
+  "tool": "NIOSH-RLE",
+  "name": "NIOSH 改良提舉方程式",
+  "description": "評估雙手提舉/降低作業的推薦重量限值（RWL）與提舉指數（LI）。",
+  "variables": [
+    {"key": "weight", "label": "物件重量", "unit": "kg", "type": "number", "min": 0.1, "max": 100, "step": 0.1, "hint": "實際提舉物的重量（公斤）", "required": true},
+    {"key": "H", "label": "水平距離 H", "unit": "cm", "type": "number", "min": 0, "max": 100, "hint": "雙手握物時，手距腳踝連線中點的水平距離", "required": true},
+    {"key": "V", "label": "起始高度 V", "unit": "cm", "type": "number", "min": 0, "max": 200, "hint": "提舉起始時，手離地高度", "required": true},
+    {"key": "D", "label": "垂直移動距離 D", "unit": "cm", "type": "number", "min": 0, "max": 200, "hint": "從提起到放下的垂直移動距離", "required": true},
+    {"key": "A", "label": "扭轉角度 A", "unit": "°", "type": "number", "min": 0, "max": 180, "hint": "身體與正前方的偏移角度", "required": true},
+    {"key": "frequency", "label": "提舉頻率 F", "unit": "次/分鐘", "type": "number", "min": 0, "max": 30, "step": 0.1, "hint": "每分鐘提舉次數（取平均）", "required": true},
+    {"key": "duration", "label": "作業持續時間", "unit": "小時", "type": "select", "options": [ {"value": 1, "label": "1小時以內"}, {"value": 2, "label": "超過1小時"} ], "hint": "總共連續提舉的時間區間（影響頻率乘數）", "required": true},
+    {"key": "coupling", "label": "握持品質 C", "type": "select", "options": [ {"value": "good", "label": "良好（有握把或易抓握）"}, {"value": "fair", "label": "一般（無握把但可穩定握持）"}, {"value": "poor", "label": "不佳（難以抓握/滑手）"} ], "hint": "手握負荷物的容易程度", "required": true}
+  ],
+  "constants": {"LC": 23},
+  "multipliers": {
+    "HM": [
+      {"cond": "H <= 25", "value": 1.0},
+      {"cond": "H <= 50", "value": 0.5},
+      {"cond": "H <= 75", "value": 0.36},
+      {"cond": "H > 75", "value": 0.0}
+    ],
+    "VM": [
+      {"cond": "V = 0", "value": 0.78},
+      {"cond": "0 < V <= 25", "value": 0.78},
+      {"cond": "25 < V <= 75", "value": 0.93},
+      {"cond": "75 < V <= 150", "value": 0.78},
+      {"cond": "150 < V <= 175", "value": 0.70},
+      {"cond": "V > 175", "value": 0.0}
+    ],
+    "DM": [
+      {"cond": "D <= 25", "value": 1.0},
+      {"cond": "25 < D <= 50", "value": 0.93},
+      {"cond": "50 < D <= 100", "value": 0.87},
+      {"cond": "100 < D <= 175", "value": 0.85},
+      {"cond": "D > 175", "value": 0.0}
+    ],
+    "AM": [
+      {"cond": "A = 0", "value": 1.0},
+      {"cond": "0 < A <= 30", "value": 0.90},
+      {"cond": "30 < A <= 60", "value": 0.81},
+      {"cond": "60 < A <= 90", "value": 0.71},
+      {"cond": "A > 90", "value": 0.50}
+    ],
+    "FM": {
+      "standing": [
+        {"cond": "interval >= 300", "value": 1.0},
+        {"cond": "interval >= 60", "value": 0.94},
+        {"cond": "interval >= 30", "value": 0.91},
+        {"cond": "interval >= 15", "value": 0.84},
+        {"cond": "interval >= 10", "value": 0.75},
+        {"cond": "interval >= 6", "value": 0.45},
+        {"cond": "interval < 6", "value": 0.37}
+      ],
+      "stooping": [
+        {"cond": "interval >= 300", "value": 0.85},
+        {"cond": "interval >= 60", "value": 0.75},
+        {"cond": "interval >= 30", "value": 0.65},
+        {"cond": "interval >= 15", "value": 0.45},
+        {"cond": "interval >= 10", "value": 0.27},
+        {"cond": "interval >= 6", "value": 0.13},
+        {"cond": "interval < 6", "value": 0.0}
+      ]
+    },
+    "CM": {
+      "standing": {"good": 1.0, "fair": 1.0, "poor": 0.90},
+      "stooping": {"good": 1.0, "fair": 0.95, "poor": 0.90}
+    }
+  },
+  "riskLevels": [
+    {"level": 1, "label": "低", "criteria": "LI <= 1.0", "description": "提舉指數1以下，負荷在安全範圍。", "recommendation": "維持現行作業方式，定期復查即可。"},
+    {"level": 2, "label": "中", "criteria": "1.0 < LI < 3.0", "description": "提舉指數大於1，部分勞工可能有過載風險。", "recommendation": "建議調整：降低負重量或提舉頻率，改善提舉姿勢等。"},
+    {"level": 3, "label": "高", "criteria": "LI >= 3.0", "description": "提舉指數超過3，幾乎所有人都有高度風險。", "recommendation": "立即採取措施降低風險，如使用輔助工具或重新設計工作流程。"}
+  ],
+  "compositeIndex": {"enabled": true, "label": "複合提舉指數 CLI", "method": "frequencyWeighted", "hint": "當有多個不同提舉任務時計算整體風險。"}
+}

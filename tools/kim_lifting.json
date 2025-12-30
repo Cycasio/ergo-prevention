@@ -1,0 +1,35 @@
+{
+  "tool": "KIM-LHC",
+  "name": "KIM 抬舉/握持/搬運",
+  "description": "評估徒手搬抬超過3公斤重物作業的肌肉骨骼風險。",
+  "variables": [
+    {"key": "frequency", "label": "每日提舉次數", "unit": "次/班", "type": "number", "min": 1, "max": 3000, "hint": "此子作業在一個工作日內執行的總次數", "required": true},
+    {"key": "weight", "label": "物件重量", "unit": "kg", "type": "number", "min": 3, "max": 100, "step": 1, "hint": "搬抬物的重量，若雙人搬抬則填單人承受重量", "required": true},
+    {"key": "gender", "label": "評估對象", "type": "select", "options": [ {"value": "male", "label": "男性"}, {"value": "female", "label": "女性"} ], "hint": "選擇要套用的負重評分標準（男性或女性）", "required": true},
+    {"key": "handling", "label": "負重操作方式", "type": "select", "options": [ {"value": 0, "label": "雙手對稱搬抬（0分）"}, {"value": 2, "label": "偶爾單手/不對稱（+2分）"}, {"value": 4, "label": "幾乎全程單手/重心不穩（+4分）"} ], "hint": "負重時使用雙手情況，是否對稱用力", "required": true},
+    {"key": "postureBase", "label": "基本姿勢評級", "type": "select", "options": [ {"value": 0, "label": "直立/半蹲抬起（0分）"}, {"value": 3, "label": "稍前傾/中等姿勢（3分）"}, {"value": 5, "label": "前傾明顯/半屈膝（5分）"}, {"value": 7, "label": "深度彎腰或深蹲（7分）"}, {"value": 9, "label": "幾乎全程彎腰（9分）"}, {"value": 20, "label": "極不良姿勢（跪/臥，20分）"} ], "hint": "根據搬抬動作的起始/結束姿勢選擇最貼近的圖示評級", "required": true},
+    {"key": "postureTwist", "label": "軀幹扭轉/側傾", "type": "select", "options": [ {"value": 0, "label": "無或很少（0分）"}, {"value": 1, "label": "偶爾發生（+1分）"}, {"value": 3, "label": "頻繁或持續（+3分）"} ], "hint": "是否經常需要扭轉身體或側彎搬抬", "required": true},
+    {"key": "postureDistance", "label": "負重遠離身體", "type": "select", "options": [ {"value": 0, "label": "無（0分）"}, {"value": 1, "label": "偶爾遠離（+1分）"}, {"value": 3, "label": "經常遠離（+3分）"} ], "hint": "搬抬時手部/負重中心是否經常離開身體中心", "required": true},
+    {"key": "postureArms", "label": "手臂抬舉高度", "type": "select", "options": [ {"value": 0, "label": "無需肩平以上抬手（0分）"}, {"value": 0.5, "label": "偶爾肘-肩高度（+0.5分）"}, {"value": 1, "label": "經常肘-肩高度（+1分）"} ], "hint": "手臂是否需要抬起至接近肩部高度", "required": true},
+    {"key": "postureOverHead", "label": "手是否高過肩", "type": "select", "options": [ {"value": 0, "label": "否（0分）"}, {"value": 1, "label": "偶爾（+1分）"}, {"value": 2, "label": "經常（+2分）"} ], "hint": "搬抬過程中手部是否需要舉過肩膀", "required": true},
+    {"key": "conditions", "label": "不良工作條件", "type": "multi-select", "options": [ {"value": "jointLimitOccasional", "label": "關節偶爾達極限（+1）", "points": 1}, {"value": "jointLimitFrequent", "label": "關節頻繁達極限（+2）", "points": 2}, {"value": "poorGripSlight", "label": "握持稍受限（+1）", "points": 1}, {"value": "poorGripSevere", "label": "握持嚴重受阻（+2）", "points": 2}, {"value": "climateBad", "label": "不良氣候（+1）", "points": 1}, {"value": "spaceRestricted", "label": "空間受限（+1）", "points": 1}, {"value": "spaceVeryBad", "label": "空間極差（+2）", "points": 2}, {"value": "heavyClothes", "label": "沉重防護裝備（+1）", "points": 1}, {"value": "holdDuration5to10s", "label": "握持5-10秒或搬2-5m（+2）", "points": 2}, {"value": "holdDurationOver10s", "label": "握持>10秒或搬>5m（+5）", "points": 5} ], "hint": "勾選作業中存在的其他不利因素，可複選", "required": false},
+    {"key": "organization", "label": "工作組織", "type": "select", "options": [ {"value": 0, "label": "良好：多樣工作交替（0分）"}, {"value": 2, "label": "受限：偶爾單一高負荷（+2分）"}, {"value": 4, "label": "不良：長時間單一高負荷（+4分）"} ], "hint": "一天中此作業是否長時間連續進行缺乏變化", "required": true}
+  ],
+  "scoring": {
+    "timePoints": [
+      {"upto": 5, "points": 1}, {"upto": 20, "points": 1.5}, {"upto": 50, "points": 2}, {"upto": 100, "points": 2.5}, {"upto": 150, "points": 3}, {"upto": 220, "points": 3.5}, {"upto": 300, "points": 4}, {"upto": 500, "points": 5}, {"upto": 750, "points": 6}, {"upto": 1000, "points": 7}, {"upto": 1500, "points": 8}, {"upto": 2000, "points": 9}, {"above": 2000, "points": 10}
+    ],
+    "loadPoints": {
+      "male": [ {"range": [3, 5], "points": 4}, {"range": [5, 10], "points": 6}, {"range": [10, 15], "points": 8}, {"range": [15, 20], "points": 11}, {"range": [20, 25], "points": 15}, {"range": [25, 30], "points": 25}, {"range": [30, 35], "points": 35}, {"range": [35, 40], "points": 75}, {"above": 40, "points": 100} ],
+      "female": [ {"range": [3, 5], "points": 6}, {"range": [5, 10], "points": 9}, {"range": [10, 15], "points": 12}, {"range": [15, 20], "points": 25}, {"range": [20, 25], "points": 75}, {"range": [25, 30], "points": 85}, {"range": [30, 35], "points": 100}, {"above": 35, "points": 100} ]
+    },
+    "postureAdditionalMax": 6,
+    "conditionsSumKey": "conditions"
+  },
+  "riskLevels": [
+    {"level": 1, "label": "低風險", "range": "<20", "description": "過載不太可能", "recommendation": "無需特別改善措施。"},
+    {"level": 2, "label": "略有風險", "range": "20-49", "description": "過載可能性稍增", "recommendation": "可考慮優化作業（如輪替、休息）以降低負荷。"},
+    {"level": 3, "label": "中高風險", "range": "50-99", "description": "一般人也可能過載，出現可逆疼痛", "recommendation": "應採取工作再設計等預防措施。"},
+    {"level": 4, "label": "高風險", "range": ">=100", "description": "極可能過載，恐有組織損傷", "recommendation": "必須進行工作再設計並加強防護。"}
+  ]
+}
